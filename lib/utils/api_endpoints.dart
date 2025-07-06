@@ -1,13 +1,5 @@
-import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+// localhost in flutter
 class APIEndPoints {
-  static final String baseUrl = "http://localhost:3000/api/";
-}
-
-class RegisterController extends GetxController {
-  TextEditingController nameController = TextEditingController();
-
-  final Future<void> _prefs = SharedPreferences.getInstance();
+  static final String baseUrl = "http://10.0.2.2:3000/api/";
 }
