@@ -34,9 +34,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      routes: {
-        '/payment' : (context) => const PaymentPage(),
-      },
+      routes: {'/payment': (context) => const PaymentPage()},
     );
   }
 }
@@ -91,55 +89,180 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.black,
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
-        title: Text(
-          widget.title,
-          style: TextStyle(color: Colors.white),
-        ),
+        title: Text(widget.title, style: TextStyle(color: Colors.white)),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      // body: Center(
+      //   // Center is a layout widget. It takes a single child and positions it
+      //   // in the middle of the parent.
+      //   child: Column(
+      //     // Column is also a layout widget. It takes a list of children and
+      //     // arranges them vertically. By default, it sizes itself to fit its
+      //     // children horizontally, and tries to be as tall as its parent.
+      //     //
+      //     // Column has various properties to control how it sizes itself and
+      //     // how it positions its children. Here we use mainAxisAlignment to
+      //     // center the children vertically; the main axis here is the vertical
+      //     // axis because Columns are vertical (the cross axis would be
+      //     // horizontal).
+      //     //
+      //     // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
+      //     // action in the IDE, or press "p" in the console), to see the
+      //     // wireframe for each widget.
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       TextFormField(
+      //         controller: registerController.nameController,
+      //         decoration: const InputDecoration(
+      //           labelText: 'Enter your name',
+      //           border: OutlineInputBorder(),
+      //         ),
+      //       ),
+      //       ElevatedButton(
+      //         onPressed: () {
+      //           registerController.saveName();
+      //         },
+      //         child: const Text('Save Name'),
+      //       ),
+      //       Text('You have pushed the button this many times:'),
+      //       Text(
+      //         '$_counter',
+      //         style: Theme.of(context).textTheme.headlineMedium,
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      backgroundColor: Colors.grey[500],
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            TextFormField(
-              controller: registerController.nameController,
-              decoration: const InputDecoration(
-                labelText: 'Enter your name',
-                border: OutlineInputBorder(),
+            SizedBox(
+              height: 160, // Set the height for the scroll view
+              child: Container(
+                color: Colors.amber[200],
+                child: GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: 5, // Show only 3 items
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 80,
+                  ),
+                  itemBuilder: (context, index) {
+                    // Example array of texts
+                    final List<String> items = [
+                      'One',
+                      'Two',
+                      'Three',
+                      'Four',
+                      'Five',
+                    ];
+                    return Card(
+                      color: Colors.amber[600],
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    items[index],
+                                    style: const TextStyle(fontSize: 14),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: IconButton(
+                                    onPressed: () => {},
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Colors.black,
+                                      size: 15,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Text("200,000")
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
-            ElevatedButton(
-              onPressed: () {
-                registerController.saveName();
-              },
-              child: const Text('Save Name'),
+            SizedBox(
+              height: 160, // Set the height for the scroll view
+              child: Container(
+                color: Colors.blue[200],
+                child: GridView.builder(
+                  scrollDirection: Axis.vertical,
+                  itemCount: 5, // Show only 3 items
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    mainAxisExtent: 80,
+                  ),
+                  itemBuilder: (context, index) {
+                    // Example array of texts
+                    final List<String> items = [
+                      'One',
+                      'Two',
+                      'Three',
+                      'Four',
+                      'Five',
+                    ];
+                    return Card(
+                      color: Colors.amber[600],
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    items[index],
+                                    style: const TextStyle(fontSize: 14),
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 30,
+                                  height: 30,
+                                  child: IconButton(
+                                    onPressed: () => {},
+                                    icon: Icon(
+                                      Icons.edit,
+                                      color: Colors.black,
+                                      size: 15,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-            Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+
+
+
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          Navigator.pushNamed(context, '/payment'),
-        },
+        onPressed: () => {Navigator.pushNamed(context, '/payment')},
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
