@@ -3,6 +3,20 @@ import 'package:get/get.dart';
 import 'package:wallet_3/controllers/test_controller.dart';
 import 'package:wallet_3/pages/payment_page.dart';
 
+class User {
+  final String name;
+  final String email;
+  final String password;
+
+  const User({required this.name, required this.email, required this.password});
+
+  static User fromJson(json) => User(
+    name: json['name'],
+    email: json['email'],
+    password: json['password'],
+  );
+}
+
 void main() {
   runApp(const MyApp());
 }
@@ -58,20 +72,26 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  List<User> users = getUsers();
 
-  RegisterController registerController = Get.put(RegisterController());
+  static List<User> getUsers() {
+    const data = [
+      {
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "password": "password123",
+      },
+      {
+        "name": "Jane Smith",
+        "email": "janesmith@example.com",
+        "password": "password456",
+      },
+    ];
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
+    return data.map<User>(User.fromJson).toList();
   }
+
+  // RegisterController registerController = Get.put(RegisterController());
 
   @override
   Widget build(BuildContext context) {
@@ -185,11 +205,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ],
                             ),
-                            Row(
-                              children: [
-                                Text("200,000")
-                              ],
-                            )
+                            Row(children: [Text("\$ 200,000")]),
                           ],
                         ),
                       ),
@@ -255,9 +271,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-
-
-
+            SizedBox(
+              height: 200,
+              child: buildUsers(users),
+            )
           ],
         ),
       ),
@@ -268,4 +285,16 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
+
+  Widget buildUsers(List<User> users) => ListView.builder(
+    itemCount: users.length,
+    itemBuilder: (context, index) {
+      final user = users[index];
+      return ListTile(
+        // leading: CircleAvatar(child: Text('${index}')),
+        title: Text(user.name),
+        subtitle: Text(user.email),
+      );
+    },
+  );
 }
