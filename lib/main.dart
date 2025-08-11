@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet_3/controllers/test_controller.dart';
+import 'package:wallet_3/pages/account_edit_page.dart';
 import 'package:wallet_3/pages/payment_page.dart';
+import 'package:http/http.dart' as http;
+import 'package:wallet_3/utils/api_endpoints.dart';
 
 class User {
   final String name;
@@ -14,6 +19,24 @@ class User {
     name: json['name'],
     email: json['email'],
     password: json['password'],
+  );
+}
+
+class Account {
+  final int id;
+  final String acc_name;
+  final int balance;
+
+  const Account({
+    required this.id,
+    required this.acc_name,
+    required this.balance,
+  });
+
+  static Account fromJson(json) => Account(
+    id: json['id'],
+    acc_name: json['acc_name'],
+    balance: json['balance'],
   );
 }
 
@@ -48,7 +71,10 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      routes: {'/payment': (context) => const PaymentPage()},
+      routes: {
+        '/payment': (context) => const PaymentPage(),
+        '/account-edit-page': (context) => AccountEditPage(),
+      },
     );
   }
 }
@@ -77,11 +103,37 @@ class _MyHomePageState extends State<MyHomePage> {
   static List<User> getUsers() {
     const data = [
       {
+        "id": 1,
         "name": "John Doe",
         "email": "johndoe@example.com",
         "password": "password123",
       },
       {
+        "id": 1,
+        "name": "Jane Smith",
+        "email": "janesmith@example.com",
+        "password": "password456",
+      },
+      {
+        "id": 1,
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "password": "password123",
+      },
+      {
+        "id": 1,
+        "name": "Jane Smith",
+        "email": "janesmith@example.com",
+        "password": "password456",
+      },
+      {
+        "id": 1,
+        "name": "John Doe",
+        "email": "johndoe@example.com",
+        "password": "password123",
+      },
+      {
+        "id": 1,
         "name": "Jane Smith",
         "email": "janesmith@example.com",
         "password": "password456",
@@ -91,7 +143,30 @@ class _MyHomePageState extends State<MyHomePage> {
     return data.map<User>(User.fromJson).toList();
   }
 
-  // RegisterController registerController = Get.put(RegisterController());
+  Future<List<Account>> fetchUsers() async {
+    var headers = {'Content-Type': 'application/json'};
+
+    var url = Uri.parse(APIEndPoints.baseUrl + 'accounts');
+
+    final response = await http.get(
+      url,
+      headers: headers,
+    );
+    if (response.statusCode == 200) {
+      final List data = json.decode(response.body);
+      return data
+          .map<Account>(
+            (json) => Account(
+              id: json['id'],
+              acc_name: json['acc_name'],
+              balance: json['balance'],
+            ),
+          )
+          .toList();
+    } else {
+      throw Exception('Failed to load users');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -111,53 +186,14 @@ class _MyHomePageState extends State<MyHomePage> {
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title, style: TextStyle(color: Colors.white)),
       ),
-      // body: Center(
-      //   // Center is a layout widget. It takes a single child and positions it
-      //   // in the middle of the parent.
-      //   child: Column(
-      //     // Column is also a layout widget. It takes a list of children and
-      //     // arranges them vertically. By default, it sizes itself to fit its
-      //     // children horizontally, and tries to be as tall as its parent.
-      //     //
-      //     // Column has various properties to control how it sizes itself and
-      //     // how it positions its children. Here we use mainAxisAlignment to
-      //     // center the children vertically; the main axis here is the vertical
-      //     // axis because Columns are vertical (the cross axis would be
-      //     // horizontal).
-      //     //
-      //     // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-      //     // action in the IDE, or press "p" in the console), to see the
-      //     // wireframe for each widget.
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       TextFormField(
-      //         controller: registerController.nameController,
-      //         decoration: const InputDecoration(
-      //           labelText: 'Enter your name',
-      //           border: OutlineInputBorder(),
-      //         ),
-      //       ),
-      //       ElevatedButton(
-      //         onPressed: () {
-      //           registerController.saveName();
-      //         },
-      //         child: const Text('Save Name'),
-      //       ),
-      //       Text('You have pushed the button this many times:'),
-      //       Text(
-      //         '$_counter',
-      //         style: Theme.of(context).textTheme.headlineMedium,
-      //       ),
-      //     ],
-      //   ),
-      // ),
       backgroundColor: Colors.grey[500],
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(0),
         child: Column(
           children: [
+            // ACCOUTNS
             SizedBox(
-              height: 160, // Set the height for the scroll view
+              height: 180, // Set the height for the scroll view
               child: Container(
                 color: Colors.amber[200],
                 child: GridView.builder(
@@ -177,6 +213,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       'Five',
                     ];
                     return Card(
+                      shape: RoundedRectangleBorder(
+                        side: BorderSide(color: Colors.black87, width: 3),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                       color: Colors.amber[600],
                       child: Padding(
                         padding: EdgeInsets.all(8.0),
@@ -195,7 +235,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                   width: 30,
                                   height: 30,
                                   child: IconButton(
-                                    onPressed: () => {},
+                                    onPressed: () => {
+                                      Navigator.pushNamed(
+                                        context,
+                                        '/account-edit-page',
+                                        arguments: {'productId': index},
+                                      ),
+                                    },
                                     icon: Icon(
                                       Icons.edit,
                                       color: Colors.black,
@@ -214,6 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+            // KOS SHER
             SizedBox(
               height: 160, // Set the height for the scroll view
               child: Container(
@@ -271,10 +318,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 200,
-              child: buildUsers(users),
-            )
+            SizedBox(height: 200, child: buildUsers(users)),
           ],
         ),
       ),
