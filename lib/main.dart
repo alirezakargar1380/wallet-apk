@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
         '/payment': (context) => const PaymentPage(),
-        '/account-edit-page': (context) => AccountEditPage(),
+        // '/account-edit-page': (context) => AccountEditPage(),
       },
     );
   }
@@ -238,11 +238,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                       height: 30,
                                       child: IconButton(
                                         onPressed: () => {
-                                          Navigator.pushNamed(
+                                          Navigator.push(
                                             context,
-                                            '/account-edit-page',
-                                            arguments: {'productId': user.id},
-                                          ),
+                                            MaterialPageRoute(builder: (context) => AccountFormPage(account: user,))
+                                          )
+                                          // Navigator.pushNamed(
+                                          //   context,
+                                          //   '/account-edit-page',
+                                          //   arguments: {'productId': user.id},
+                                          // ),
                                         },
                                         icon: Icon(
                                           Icons.edit,
