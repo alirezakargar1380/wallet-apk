@@ -13,7 +13,6 @@ class RegisterController extends GetxController {
 
   Future<void> saveName() async {
     try {
-      print('im hrer');
 
       var headers = {
         'Content-Type': 'application/json',
