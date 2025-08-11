@@ -17,8 +17,40 @@ class AccountEditPage extends StatelessWidget {
         // the App.build method, and use it to set our appbar title.
         title: Text("edit account", style: TextStyle(color: Colors.white)),
       ),
-      backgroundColor: Colors.grey[500],
-      body: Center(child: Text("Account $productId")),
+      backgroundColor: Colors.grey[800],
+      body: Container(
+        child: Column(
+          children: [
+            Card(
+              color: Colors.white70,
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.account_circle),
+                    title: Text("Account ID: $productId"),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Name',
+                        contentPadding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide(
+                            color: Colors.black54,
+                            width: 10.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
