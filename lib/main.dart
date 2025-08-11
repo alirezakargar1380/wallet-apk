@@ -143,15 +143,12 @@ class _MyHomePageState extends State<MyHomePage> {
     return data.map<User>(User.fromJson).toList();
   }
 
-  Future<List<Account>> fetchUsers() async {
+  Future<List<Account>> fetchAccounts() async {
     var headers = {'Content-Type': 'application/json'};
 
     var url = Uri.parse(APIEndPoints.baseUrl + 'accounts');
 
-    final response = await http.get(
-      url,
-      headers: headers,
-    );
+    final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       final List data = json.decode(response.body);
       return data
@@ -196,65 +193,72 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 180, // Set the height for the scroll view
               child: Container(
                 color: Colors.amber[200],
-                child: GridView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemCount: 5, // Show only 3 items
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisExtent: 80,
-                  ),
-                  itemBuilder: (context, index) {
-                    // Example array of texts
-                    final List<String> items = [
-                      'One',
-                      'Two',
-                      'Three',
-                      'Four',
-                      'Five',
-                    ];
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(color: Colors.black87, width: 3),
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                      color: Colors.amber[600],
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Row(
+                child: FutureBuilder<List<Account>>(
+                  future: fetchAccounts(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No users found'));
+                    }
+                    final users = snapshot.data!;
+                    return GridView.builder(
+                      padding: const EdgeInsets.all(8),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            mainAxisExtent: 80,
+                          ),
+                      itemCount: users.length,
+                      itemBuilder: (context, index) {
+                        final user = users[index];
+                        return Card(
+                          shape: RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.black87, width: 3),
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                          color: Colors.amber[600],
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Column(
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    items[index],
-                                    style: const TextStyle(fontSize: 14),
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 30,
-                                  height: 30,
-                                  child: IconButton(
-                                    onPressed: () => {
-                                      Navigator.pushNamed(
-                                        context,
-                                        '/account-edit-page',
-                                        arguments: {'productId': index},
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        user.acc_name,
+                                        style: const TextStyle(fontSize: 14),
+                                        textAlign: TextAlign.left,
                                       ),
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      color: Colors.black,
-                                      size: 15,
                                     ),
-                                  ),
+                                    SizedBox(
+                                      width: 30,
+                                      height: 30,
+                                      child: IconButton(
+                                        onPressed: () => {
+                                          Navigator.pushNamed(
+                                            context,
+                                            '/account-edit-page',
+                                            arguments: {'productId': user.id},
+                                          ),
+                                        },
+                                        icon: Icon(
+                                          Icons.edit,
+                                          color: Colors.black,
+                                          size: 15,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                                Row(children: [Text("\$"+user.balance.toString())]),
                               ],
                             ),
-                            Row(children: [Text("\$ 200,000")]),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     );
                   },
                 ),
